@@ -1,0 +1,70 @@
+import tkinter as tk
+import random
+
+def close():
+    window.destroy()
+
+def gen(input):
+    s = list("~~~~~")
+    k = 0
+    while k < 3:
+        i = random.randint(0,4)
+        while s[i] != '~':
+            i = random.randint(0,4)
+        s[i] = input[k]
+        k += 1
+    for i in range(5):
+        if s[i] == "~":
+            s[i] = chr(random.randint(65,90)) 
+    ret = "".join(s)
+    return ret
+
+def calc():
+    sA = str(arg_A.get())
+    sA123 = sA[3:]
+    sA456 = sA[:3]
+    first = gen(sA123)
+    second = gen(sA456)
+    third = str(int(sA123) + int(sA456)).zfill(4)
+    result.delete(0, tk.END)
+    result.insert(0, third)
+    result.insert(0, chr(32))
+    result.insert(0, second)
+    result.insert(0, chr(32))
+    result.insert(0, first)
+
+def input_validation(s):
+    print("input_validation", s)
+    return s.isdigit() and (len(s) <= 6)
+
+window = tk.Tk()
+window.title('-=< Serial generator >=-')
+window.geometry('360x240')
+bg = tk.PhotoImage(file='lab4.gif')
+
+frame = tk.Frame(window)
+frame.place(relx=0.5, rely=0.5, anchor='center')
+
+lbl_bg = tk.Label(frame, image=bg)
+lbl_bg.place(x=0, y=0)
+
+lbl_A = tk.Label(frame, text='Enter numbers', font=('Arial', 20)) 
+lbl_A.grid(column=0, row=0, padx=10, pady=15, sticky='w')
+vcmd = (window.register(input_validation), '%P')
+arg_A = tk.Entry(frame, width = 10)
+arg_A.config(validate="key", validatecommand=vcmd)
+arg_A.insert(0, '')
+arg_A.grid(column=1, row=0, padx=10, pady=15, sticky='w')
+
+lbl_result = tk.Label(frame, text='Serial', font=('Arial', 20))
+lbl_result.grid(column=0, row=1,padx=10, pady=15, sticky='w')
+result = tk.Entry(frame, width = 16)
+result.insert(0, '')
+result.grid(column=1, row=1, padx=10, pady=15, sticky='w')
+
+btn_calc = tk.Button(frame, text='Calculate', font=('Arial', 15), command=calc)
+btn_calc.grid(column=0, row=2)
+btn_exit = tk.Button(frame, text='Cancel', font=('Arial', 15), command=close)
+btn_exit.grid(column=1, row=2)
+
+window.mainloop()
